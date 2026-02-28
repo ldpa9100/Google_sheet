@@ -2,7 +2,8 @@
   "workflowApiVersion": "1.1",
   "metaData": {
     "icon": "https://ssl.gstatic.com/docs/spreadsheets/favicon3.ico",
-    "category": "message"
+    "category": "custom",
+    "isConfigured": false
   },
   "type": "REST",
   "lang": {
@@ -26,24 +27,44 @@
       "header": "",
       "format": "json",
       "useJwt": false,
-      "timeout": 15000
+      "timeout": 15000,
+      "retryCount": 2,
+      "retryDelay": 5000
     }
   },
   "configurationArguments": {
     "applicationExtensionKey": "dcc45dd8-adc4-4eac-b7de-8498af818ee6",
-    "save":     { "url": "https://script.google.com/macros/s/AKfycbxZbwpAzhwu5ufye9tJa_dEsjt-cRaFJFy1DE-LxJZf5Js_1s2hrlZQEf6AQb5yX5Gy-A/exec", "verb": "POST" },
-    "publish":  { "url": "https://script.google.com/macros/s/AKfycbxZbwpAzhwu5ufye9tJa_dEsjt-cRaFJFy1DE-LxJZf5Js_1s2hrlZQEf6AQb5yX5Gy-A/exec", "verb": "POST" },
-    "validate": { "url": "https://script.google.com/macros/s/AKfycbxZbwpAzhwu5ufye9tJa_dEsjt-cRaFJFy1DE-LxJZf5Js_1s2hrlZQEf6AQb5yX5Gy-A/exec", "verb": "POST" }
+    "save": {
+      "url": "https://script.google.com/macros/s/AKfycbxZbwpAzhwu5ufye9tJa_dEsjt-cRaFJFy1DE-LxJZf5Js_1s2hrlZQEf6AQb5yX5Gy-A/exec",
+      "verb": "POST"
+    },
+    "publish": {
+      "url": "https://script.google.com/macros/s/AKfycbxZbwpAzhwu5ufye9tJa_dEsjt-cRaFJFy1DE-LxJZf5Js_1s2hrlZQEf6AQb5yX5Gy-A/exec",
+      "verb": "POST"
+    },
+    "validate": {
+      "url": "https://script.google.com/macros/s/AKfycbxZbwpAzhwu5ufye9tJa_dEsjt-cRaFJFy1DE-LxJZf5Js_1s2hrlZQEf6AQb5yX5Gy-A/exec",
+      "verb": "POST"
+    },
+    "stop": {
+      "url": "https://script.google.com/macros/s/AKfycbxZbwpAzhwu5ufye9tJa_dEsjt-cRaFJFy1DE-LxJZf5Js_1s2hrlZQEf6AQb5yX5Gy-A/exec",
+      "verb": "POST"
+    }
   },
   "wizardSteps": [
-    { "label": "Configuración", "key": "step1" }
+    {
+      "label": "Configuración",
+      "key": "step1",
+      "active": true
+    }
   ],
   "userInterfaces": {
     "configModal": {
-      "height": 200,
-      "width": 400,
+      "height": 420,
+      "width": 480,
       "fullscreen": false,
       "url": "https://ldpa9100.github.io/Google_sheet/index.html"
     }
   }
 }
+
