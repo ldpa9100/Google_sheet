@@ -21,7 +21,7 @@
         { "journeyName": "{{Journey.Name}}" }
       ],
       "outArguments": [],
-      "url": "https://script.google.com/macros/s/AKfycbznPR5WLDgv1PKuDMk5Fqzi_2ZP6LOS9vG1QUbIvZXIS1XseHolSkQ9481qseh_Bo7jFQ/exec",
+      "url": "https://script.google.com/macros/s/AKfycbyGNILufmp437IhxfcEIv2juCe1RdnIYBPafZlnC8aeSxuArSDH4pKogaxs6Qyozz08tA/exec",
       "verb": "POST",
       "body": "",
       "header": "",
