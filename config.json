@@ -20,7 +20,7 @@
         { "journeyName": "{{Journey.Name}}" }
       ],
       "outArguments": [],
-      "url": "PEGAR_AQUI_URL_APPS_SCRIPT",
+      "url": "https://script.google.com/macros/s/AKfycbyCOyxxF82-iufjuy_RxhcP_XCLm4hK8mrbwZonIs8fmxTyIgFzd-VUoIaUwwxaf_UTGA/exec",
       "verb": "POST",
       "body": "",
       "header": "",
@@ -30,10 +30,10 @@
     }
   },
   "configurationArguments": {
-    "applicationExtensionKey": "PEGAR_AQUI_APP_EXTENSION_KEY",
-    "save":     { "url": "PEGAR_AQUI_URL_APPS_SCRIPT", "verb": "POST" },
-    "publish":  { "url": "PEGAR_AQUI_URL_APPS_SCRIPT", "verb": "POST" },
-    "validate": { "url": "PEGAR_AQUI_URL_APPS_SCRIPT", "verb": "POST" }
+    "applicationExtensionKey": "dcc45dd8-adc4-4eac-b7de-8498af818ee6",
+    "save":     { "url": "https://script.google.com/macros/s/AKfycbyCOyxxF82-iufjuy_RxhcP_XCLm4hK8mrbwZonIs8fmxTyIgFzd-VUoIaUwwxaf_UTGA/exec", "verb": "POST" },
+    "publish":  { "url": "https://script.google.com/macros/s/AKfycbyCOyxxF82-iufjuy_RxhcP_XCLm4hK8mrbwZonIs8fmxTyIgFzd-VUoIaUwwxaf_UTGA/exec", "verb": "POST" },
+    "validate": { "url": "https://script.google.com/macros/s/AKfycbyCOyxxF82-iufjuy_RxhcP_XCLm4hK8mrbwZonIs8fmxTyIgFzd-VUoIaUwwxaf_UTGA/exec", "verb": "POST" }
   },
   "wizardSteps": [
     { "label": "Configuración", "key": "step1" }
