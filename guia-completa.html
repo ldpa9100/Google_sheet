@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Guía Completa — Custom Activity SFMC → Google Sheets</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --verde: #0f9d58;
+    --verde-oscuro: #0a6e3e;
+    --azul: #1a73e8;
+    --fondo: #f8fffe;
+    --gris: #f1f3f4;
+    --texto: #1c1c1c;
+    --suave: #666;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--fondo);
+    color: var(--texto);
+    line-height: 1.7;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0a6e3e 0%, #1a73e8 100%);
+    padding: 50px 24px 40px;
+    text-align: center;
+    color: white;
+  }
+  header .pretitle {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 12px;
+  }
+  header h1 { font-size: 28px; font-weight: 700; margin-bottom: 12px; }
+  header p { font-size: 15px; opacity: 0.85; max-width: 560px; margin: 0 auto; }
+
+  /* ARQUITECTURA */
+  .arch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    background: white;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 24px 20px;
+  }
+  .arch-nodo {
+    background: var(--gris);
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    min-width: 140px;
+  }
+  .arch-nodo small { display: block; font-weight: 400; font-size: 11px; color: var(--suave); margin-top: 2px; }
+  .arch-nodo.verde { background: #e6f4ea; border-color: var(--verde); color: var(--verde-oscuro); }
+  .arch-nodo.azul  { background: #e8f0fe; border-color: var(--azul); color: #0d47a1; }
+  .arch-flecha { font-size: 22px; color: #bbb; padding: 0 8px; }
+
+  /* CONTENIDO */
+  .wrap { max-width: 780px; margin: 0 auto; padding: 40px 20px 80px; }
+
+  /* SECCIÓN DE ARCHIVOS */
+  .archivos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin: 28px 0;
+  }
+  .archivo-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 18px;
+    border-top: 3px solid var(--verde);
+  }
+  .archivo-card .nombre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--verde-oscuro);
+    margin-bottom: 6px;
+  }
+  .archivo-card p { font-size: 13px; color: var(--suave); line-height: 1.5; }
+
+  /* PASOS */
+  .paso {
+    background: white;
+    border: 1px solid #e8e8e8;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .paso-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 24px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .paso-num {
+    width: 38px; height: 38px;
+    background: var(--verde);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px;
+    flex-shrink: 0;
+  }
+  .paso-titulo { font-size: 16px; font-weight: 700; color: var(--texto); }
+  .paso-sub { font-size: 12px; color: var(--suave); margin-top: 2px; }
+  .paso-body { padding: 22px 24px; }
+
+  ol { padding-left: 20px; }
+  ol li { margin-bottom: 10px; font-size: 14px; }
+  ol li b { color: var(--verde-oscuro); }
+
+  /* BLOQUES DE CÓDIGO */
+  .codigo {
+    background: #1e2030;
+    color: #c0caf5;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 14px 0;
+    overflow-x: auto;
+    line-height: 1.8;
+  }
+  .codigo .hl { color: #9ece6a; font-weight: 500; }
+  .codigo .co { color: #565f89; }
+
+  /* CAJAS */
+  .caja {
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 13px;
+    margin: 14px 0;
+    line-height: 1.6;
+  }
+  .caja.aviso  { background: #fff8e1; border-left: 4px solid #f9a825; }
+  .caja.ok     { background: #e6f4ea; border-left: 4px solid var(--verde); }
+  .caja.info   { background: #e8f0fe; border-left: 4px solid var(--azul); }
+  .caja b { display: block; margin-bottom: 4px; }
+
+  /* URL BOX */
+  .url-box {
+    background: #f8f9fa;
+    border: 1px dashed #ccc;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #333;
+    margin: 10px 0;
+    word-break: break-all;
+  }
+
+  /* TABLA */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 14px 0; }
+  th { background: var(--verde); color: white; padding: 10px 14px; text-align: left; }
+  td { padding: 10px 14px; border-bottom: 1px solid #eee; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #fafafa; }
+
+  h2 { font-size: 20px; font-weight: 700; color: var(--verde-oscuro); margin: 36px 0 8px; }
+  h3 { font-size: 15px; font-weight: 600; color: var(--texto); margin: 18px 0 8px; }
+
+  .tag {
+    display: inline-block;
+    background: #e6f4ea;
+    color: var(--verde-oscuro);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 20px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="pretitle">Guía completa desde cero</div>
+  <h1>Custom Activity en SFMC<br/>→ Google Sheets</h1>
+  <p>Cuando un contacto pase por tu Journey, sus datos aparecerán automáticamente como una fila nueva en tu hoja de Google Sheets.</p>
+</header>
+
+<!-- ARQUITECTURA -->
+<div class="arch">
+  <div class="arch-nodo azul">Journey Builder<br/><small>SFMC</small></div>
+  <div class="arch-flecha">→</div>
+  <div class="arch-nodo">GitHub Pages<br/><small>Aloja config.json e index.html</small></div>
+  <div class="arch-flecha">→</div>
+  <div class="arch-nodo">Google Apps Script<br/><small>Recibe el dato</small></div>
+  <div class="arch-flecha">→</div>
+  <div class="arch-nodo verde">Google Sheets<br/><small>Registra la fila</small></div>
+</div>
+
+<div class="wrap">
+
+  <!-- ARCHIVOS -->
+  <h2>📁 Los archivos que tienes</h2>
+  <p style="font-size:14px; color:var(--suave);">Son 3 archivos en total. Aquí está el rol exacto de cada uno antes de empezar:</p>
+
+  <div class="archivos-grid">
+    <div class="archivo-card">
+      <div class="nombre">config.json</div>
+      <p>Le dice a SFMC dónde está tu actividad, qué datos enviar y cómo llamarla. <b>Debe estar publicado en GitHub Pages</b> para que SFMC pueda leerlo por internet.</p>
+    </div>
+    <div class="archivo-card">
+      <div class="nombre">index.html</div>
+      <p>Es la pequeña pantalla que aparece dentro de Journey Builder cuando configuras la actividad. <b>También va en GitHub Pages</b>, junto con config.json.</p>
+    </div>
+    <div class="archivo-card">
+      <div class="nombre">codigo-apps-script.gs</div>
+      <p>Es el código que recibe los datos de SFMC y los escribe en Google Sheets. <b>Va dentro de Google Sheets</b>, no en GitHub.</p>
+    </div>
+  </div>
+
+  <div class="caja info">
+    <b>💡 Resumen de dónde va cada cosa</b>
+    <code>config.json</code> e <code>index.html</code> → GitHub Pages (son públicos en internet)<br/>
+    <code>codigo-apps-script.gs</code> → Google Sheets → Extensiones → Apps Script
+  </div>
+
+  <!-- PASO 1 -->
+  <div class="paso">
+    <div class="paso-header">
+      <div class="paso-num">1</div>
+      <div>
+        <div class="paso-titulo">Crear la Google Sheet y configurar Apps Script</div>
+        <div class="paso-sub">Aquí vive el código que recibe los datos — dentro de Google, sin servidor externo</div>
+      </div>
+    </div>
+    <div class="paso-body">
+      <ol>
+        <li>Ve a <b>sheets.google.com</b> e inicia sesión con tu Gmail</li>
+        <li>Clic en <b>"+"</b> para crear una hoja nueva en blanco</li>
+        <li>Ponle nombre: <b>SFMC Journey Datos</b></li>
+        <li>En el menú superior ve a <b>Extensiones → Apps Script</b> — se abrirá una nueva pestaña con un editor de código</li>
+        <li>Verás una función vacía llamada <code>myFunction()</code>. <b>Borra todo el contenido del editor</b></li>
+        <li>Abre el archivo <b>codigo-apps-script.gs</b> que descargaste, copia todo su contenido y pégalo en el editor</li>
+        <li>Haz clic en el ícono de guardar 💾 (o Ctrl+S). Nómbralo <b>SFMC Activity</b> si te lo pide</li>
+      </ol>
+
+      <h3>Probar que el código funciona antes de continuar</h3>
+      <ol>
+        <li>En el editor de Apps Script, en el menú desplegable de funciones (arriba al centro), selecciona <b>probarManualmente</b></li>
+        <li>Clic en <b>▶ Ejecutar</b></li>
+        <li>La primera vez pedirá permisos — clic en <b>"Revisar permisos"</b> → elige tu cuenta de Gmail → clic en <b>"Permitir"</b></li>
+        <li>Vuelve a tu hoja de Google Sheets y verifica que apareció una fila con datos de prueba</li>
+      </ol>
+
+      <div class="caja ok">
+        <b>✅ Si ves esto en tu Sheets, el código funciona correctamente:</b>
+        <table style="margin-top:10px;">
+          <tr><th>Fecha</th><th>Contact Key</th><th>Email</th><th>Nombre</th><th>Journey</th></tr>
+          <tr><td>15/03/2025 10:30</td><td>TEST-001</td><td>prueba@miempresa.com</td><td>Ana</td><td>Journey de Prueba</td></tr>
+        </table>
+      </div>
+
+      <h3>Publicar el código como Web App (esto genera la URL que usará SFMC)</h3>
+      <ol>
+        <li>En el editor de Apps Script, clic en el botón azul <b>"Implementar"</b> (arriba a la derecha)</li>
+        <li>Clic en <b>"Nueva implementación"</b></li>
+        <li>Al lado de "Tipo de implementación", clic en el ícono ⚙️ y selecciona <b>"Aplicación web"</b></li>
+        <li>Configura los campos exactamente así:
+          <div class="codigo">
+Descripción:        <span class="hl">SFMC Custom Activity</span>
+Ejecutar como:      <span class="hl">Yo (tu correo@gmail.com)</span>
+Quién tiene acceso: <span class="hl">Cualquier persona</span>  <span class="co">← IMPORTANTE: no "con cuenta de Google", sino "Cualquier persona"</span>
+          </div>
+        </li>
+        <li>Clic en <b>"Implementar"</b></li>
+        <li>Copia la <b>"URL de la aplicación web"</b> que aparece. Se ve así:</li>
+      </ol>
+      <div class="url-box">https://script.google.com/macros/s/AKfycby<b>XXXXXXXXXXXXXXXXXXXXXXX</b>/exec</div>
+
+      <div class="caja aviso">
+        <b>⚠️ Guarda bien esta URL</b>
+        La necesitarás en el Paso 3. Si la pierdes puedes volver a verla en: Apps Script → Implementar → Administrar implementaciones.
+      </div>
+    </div>
+  </div>
+
+  <!-- PASO 2 -->
+  <div class="paso">
+    <div class="paso-header">
+      <div class="paso-num">2</div>
+      <div>
+        <div class="paso-titulo">Publicar los archivos en GitHub Pages</div>
+        <div class="paso-sub">Esto le da a config.json e index.html una URL pública en internet que SFMC puede leer</div>
+      </div>
+    </div>
+    <div class="paso-body">
+      <div class="caja info">
+        <b>¿Por qué GitHub Pages?</b>
+        SFMC necesita leer el config.json desde una URL pública (https://...). GitHub Pages convierte tu repositorio en un sitio web gratuito en segundos.
+      </div>
+
+      <ol>
+        <li>Ve a <b>github.com</b> e inicia sesión</li>
+        <li>Clic en el botón verde <b>"New"</b> para crear un repositorio nuevo</li>
+        <li>Configura así:
+          <div class="codigo">
+Repository name: <span class="hl">sfmc-sheets-activity</span>
+Visibility:      <span class="hl">Public</span>  <span class="co">← debe ser público para que SFMC pueda leerlo</span>
+          </div>
+        </li>
+        <li>Clic en <b>"Create repository"</b></li>
+        <li>En la página del repositorio vacío, clic en <b>"uploading an existing file"</b></li>
+        <li>Arrastra o selecciona <b>únicamente estos 2 archivos</b>:
+          <ul style="margin-top:8px; list-style:none; padding:0;">
+            <li style="padding:4px 0;">📄 <code>config.json</code></li>
+            <li style="padding:4px 0;">📄 <code>index.html</code></li>
+          </ul>
+        </li>
+        <li>Clic en <b>"Commit changes"</b> (el botón verde abajo)</li>
+        <li>Ahora activa GitHub Pages: ve a <b>Settings</b> (pestaña del repositorio) → sección <b>"Pages"</b> en el menú izquierdo</li>
+        <li>En "Branch", selecciona <b>main</b> y clic en <b>Save</b></li>
+        <li>Espera 2-3 minutos y recarga la página. Aparecerá un mensaje verde con tu URL pública:</li>
+      </ol>
+      <div class="url-box">https://<b>TU-USUARIO</b>.github.io/sfmc-sheets-activity/</div>
+
+      <div class="caja ok">
+        <b>✅ Verifica que funciona</b>
+        Abre en tu navegador: <code>https://TU-USUARIO.github.io/sfmc-sheets-activity/config.json</code><br/>
+        Debes ver el contenido del archivo JSON directamente en el navegador. Si lo ves, está listo.
+      </div>
+    </div>
+  </div>
+
+  <!-- PASO 3 -->
+  <div class="paso">
+    <div class="paso-header">
+      <div class="paso-num">3</div>
+      <div>
+        <div class="paso-titulo">Completar el config.json con las URLs reales</div>
+        <div class="paso-sub">Este es el paso donde conectas todo — editas el archivo y lo vuelves a subir</div>
+      </div>
+    </div>
+    <div class="paso-body">
+      <p style="font-size:14px; margin-bottom:14px;">Ahora que tienes las dos URLs (Apps Script del Paso 1 y GitHub Pages del Paso 2), debes ponerlas en config.json. Abre el archivo en un editor de texto (Notepad, TextEdit, etc.) y realiza estos reemplazos:</p>
+
+      <table>
+        <tr><th>Texto a buscar en config.json</th><th>Reemplazar por</th><th>Cuántas veces aparece</th></tr>
+        <tr>
+          <td><code>PEGAR_AQUI_URL_APPS_SCRIPT</code></td>
+          <td>Tu URL de Apps Script:<br/><code>https://script.google.com/macros/s/.../exec</code></td>
+          <td><b>4 veces</b> (execute, save, publish, validate)</td>
+        </tr>
+        <tr>
+          <td><code>PEGAR_AQUI_URL_GITHUB_PAGES</code></td>
+          <td>Tu URL de GitHub Pages:<br/><code>https://TU-USUARIO.github.io/sfmc-sheets-activity</code></td>
+          <td><b>1 vez</b> (en userInterfaces → configModal → url)</td>
+        </tr>
+        <tr>
+          <td><code>PEGAR_AQUI_APP_EXTENSION_KEY</code></td>
+          <td>La key que obtendrás en el Paso 4 de SFMC</td>
+          <td><b>1 vez</b> — déjala para después del Paso 4</td>
+        </tr>
+      </table>
+
+      <div class="caja aviso">
+        <b>⚠️ El reemplazo de PEGAR_AQUI_URL_APPS_SCRIPT debe ser exacto</b>
+        La URL debe terminar en <code>/exec</code>, no en <code>/dev</code>. Ejemplo correcto:<br/>
+        <code>https://script.google.com/macros/s/AKfycbyXXXXXX/exec</code>
+      </div>
+
+      <h3>Volver a subir el config.json actualizado a GitHub</h3>
+      <ol>
+        <li>Ve a tu repositorio en github.com/TU-USUARIO/sfmc-sheets-activity</li>
+        <li>Clic en el archivo <b>config.json</b></li>
+        <li>Clic en el ícono ✏️ (editar) o en "Upload files" para reemplazarlo</li>
+        <li>Confirma con <b>"Commit changes"</b></li>
+        <li>GitHub Pages se actualiza automáticamente en 1-2 minutos</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- PASO 4 -->
+  <div class="paso">
+    <div class="paso-header">
+      <div class="paso-num">4</div>
+      <div>
+        <div class="paso-titulo">Registrar la actividad en Salesforce Marketing Cloud</div>
+        <div class="paso-sub">Setup → Installed Packages — aquí SFMC se entera de que existe tu actividad</div>
+      </div>
+    </div>
+    <div class="paso-body">
+      <ol>
+        <li>En SFMC, clic en tu nombre de usuario (arriba a la derecha) → <b>Setup</b></li>
+        <li>En el menú izquierdo busca: <b>Platform Tools → Apps → Installed Packages</b></li>
+        <li>Clic en <b>"New"</b></li>
+        <li>Completa:
+          <div class="codigo">
+Nombre:      <span class="hl">Google Sheets Activity</span>
+Descripción: <span class="hl">Registra datos del Journey en Google Sheets</span>
+          </div>
+        </li>
+        <li>Clic en <b>Save</b></li>
+        <li>Dentro del paquete recién creado, clic en <b>"Add Component"</b></li>
+        <li>Selecciona <b>"Journey Builder Activity"</b> y clic en <b>Next</b></li>
+        <li>Completa el formulario:
+          <div class="codigo">
+Name:         <span class="hl">Guardar en Google Sheets</span>
+Endpoint URL: <span class="hl">https://TU-USUARIO.github.io/sfmc-sheets-activity</span>
+          </div>
+        </li>
+        <li>Clic en <b>Save</b></li>
+        <li>Verás la actividad creada. Busca el campo llamado <b>"Unique Key"</b> y cópialo — se ve así:</li>
+      </ol>
+      <div class="url-box">xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</div>
+
+      <h3>Pegar la Unique Key en config.json</h3>
+      <ol>
+        <li>Abre el <b>config.json</b> en tu editor de texto</li>
+        <li>Reemplaza <code>PEGAR_AQUI_APP_EXTENSION_KEY</code> por la key copiada</li>
+        <li>Guarda el archivo y vuelve a subirlo a GitHub (igual que en el Paso 3)</li>
+      </ol>
+
+      <div class="caja ok">
+        <b>✅ En este punto tienes todo conectado:</b>
+        GitHub Pages tiene config.json completo → SFMC conoce la actividad → Apps Script recibe datos → Google Sheets los guarda.
+      </div>
+    </div>
+  </div>
+
+  <!-- PASO 5 -->
+  <div class="paso">
+    <div class="paso-header">
+      <div class="paso-num">5</div>
+      <div>
+        <div class="paso-titulo">Crear el Journey y ejecutar la prueba real</div>
+        <div class="paso-sub">El momento de verificar que todo funciona de extremo a extremo</div>
+      </div>
+    </div>
+    <div class="paso-body">
+      <ol>
+        <li>Ve a <b>Journey Builder</b> en SFMC</li>
+        <li>Clic en <b>"Create New Journey"</b> → selecciona <b>"Multi-Step Journey"</b></li>
+        <li>Ponle nombre: <b>Prueba Sheets</b></li>
+        <li>En la sección <b>Entry Source</b>, selecciona tu <b>Data Extension de prueba</b></li>
+        <li>En el panel lateral izquierdo, busca tu actividad. Puede estar bajo la categoría <b>"Custom"</b> con el nombre <b>"Guardar en Google Sheets"</b></li>
+        <li>Arrástrala al canvas y conéctala al Entry</li>
+        <li>Haz <b>doble clic</b> en la actividad — se abrirá el modal con el index.html</li>
+        <li>Clic en <b>"Confirmar y listo"</b></li>
+        <li>Clic en <b>"Activate"</b> para activar el Journey</li>
+        <li>SFMC procesará los contactos de tu Data Extension. Dependiendo del modo de entrada (inmediato / programado) los contactos entrarán en minutos</li>
+        <li>Ve a tu <b>Google Sheet</b> y observa cómo aparecen las filas nuevas</li>
+      </ol>
+
+      <div class="caja ok">
+        <b>✅ Resultado esperado en Google Sheets:</b>
+        <table style="margin-top:10px;">
+          <tr><th>Fecha</th><th>Contact Key</th><th>Email</th><th>Nombre</th><th>Journey</th></tr>
+          <tr><td>15/03/2025 14:22</td><td>CON-00123</td><td>maria@empresa.com</td><td>María</td><td>Prueba Sheets</td></tr>
+          <tr><td>15/03/2025 14:22</td><td>CON-00456</td><td>carlos@empresa.com</td><td>Carlos</td><td>Prueba Sheets</td></tr>
+        </table>
+        Una fila por cada contacto que pasó por la actividad. 🎉
+      </div>
+    </div>
+  </div>
+
+  <!-- PROBLEMAS -->
+  <h2>🔧 Problemas frecuentes</h2>
+  <div class="paso">
+    <div class="paso-body" style="padding-top: 20px;">
+      <table>
+        <tr><th>Síntoma</th><th>Causa</th><th>Solución</th></tr>
+        <tr>
+          <td>La actividad no aparece en Journey Builder</td>
+          <td>Recién registrada en Installed Packages</td>
+          <td>Espera 10 minutos y recarga Journey Builder</td>
+        </tr>
+        <tr>
+          <td>El modal no carga al hacer doble clic en la actividad</td>
+          <td>La URL del index.html en config.json es incorrecta</td>
+          <td>Verifica que <code>configModal → url</code> apunte exactamente a <code>https://TU-USUARIO.github.io/sfmc-sheets-activity/index.html</code></td>
+        </tr>
+        <tr>
+          <td>No llegan datos a Google Sheets</td>
+          <td>"Quién tiene acceso" en Apps Script no es "Cualquier persona"</td>
+          <td>En Apps Script → Implementar → Administrar implementaciones → editar → cambiar acceso a "Cualquier persona" → nueva versión</td>
+        </tr>
+        <tr>
+          <td>El Journey da error al activar</td>
+          <td>La URL de execute en config.json apunta a /dev en vez de /exec</td>
+          <td>Verifica que la URL de Apps Script termina en <code>/exec</code></td>
+        </tr>
+        <tr>
+          <td>config.json en GitHub muestra los textos PEGAR_AQUI sin reemplazar</td>
+          <td>Se subió la versión vieja del archivo</td>
+          <td>Edita el archivo directamente en GitHub (botón ✏️) y haz commit</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

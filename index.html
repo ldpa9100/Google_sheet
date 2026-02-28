@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Guardar en Google Sheets</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f0faf4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #c3e6cb;
+      padding: 28px 32px;
+      max-width: 360px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(15,157,88,0.08);
+    }
+    .icon { font-size: 40px; margin-bottom: 12px; }
+    h2 {
+      font-size: 17px;
+      font-weight: 600;
+      color: #0a4a28;
+      margin-bottom: 8px;
+    }
+    p {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .campos {
+      background: #f6fdf8;
+      border: 1px solid #d4edda;
+      border-radius: 8px;
+      padding: 14px 16px;
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .campos p {
+      font-size: 12px;
+      color: #0f9d58;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .campo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #333;
+      padding: 3px 0;
+    }
+    .campo span { color: #0f9d58; font-size: 15px; }
+    .btn {
+      background: #0f9d58;
+      color: white;
+      border: none;
+      padding: 11px 0;
+      border-radius: 8px;
+      width: 100%;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #0a7a44; }
+    .ok { display: none; color: #0f9d58; font-size: 13px; margin-top: 12px; font-weight: 600; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="icon">📊</div>
+  <h2>Guardar en Google Sheets</h2>
+  <p>Cuando un contacto llegue a este paso del Journey, sus datos se registrarán automáticamente en tu hoja.</p>
+
+  <div class="campos">
+    <p>CAMPOS QUE SE GUARDARÁN</p>
+    <div class="campo"><span>✓</span> Fecha y hora</div>
+    <div class="campo"><span>✓</span> Contact Key</div>
+    <div class="campo"><span>✓</span> Email</div>
+    <div class="campo"><span>✓</span> Nombre</div>
+    <div class="campo"><span>✓</span> Nombre del Journey</div>
+  </div>
+
+  <button class="btn" onclick="confirmar()">Confirmar y listo</button>
+  <div class="ok" id="ok">✅ Actividad configurada correctamente</div>
+</div>
+
+<script>
+  // Cargar el SDK de Journey Builder
+  (function() {
+    var s = document.createElement('script');
+    s.src = 'https://cdn.exacttarget.com/ufec/journey-builder-ui/custom-activity/sdk.js';
+    s.onload = function() {
+      window.sdk = new window.JourneyBuilderUISDK({
+        onInitActivity: function() {},
+        onClickedNext: function() { confirmar(); }
+      });
+    };
+    document.head.appendChild(s);
+  })();
+
+  function confirmar() {
+    if (window.sdk && window.sdk.save) {
+      window.sdk.save({
+        metaData: { isConfigured: true },
+        configurationArguments: { configurado: true }
+      });
+    }
+    document.getElementById('ok').style.display = 'block';
+  }
+</script>
+</body>
+</html>
