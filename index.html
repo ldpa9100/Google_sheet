@@ -26,18 +26,8 @@
       box-shadow: 0 4px 16px rgba(15,157,88,0.08);
     }
     .icon { font-size: 40px; margin-bottom: 12px; }
-    h2 {
-      font-size: 17px;
-      font-weight: 600;
-      color: #0a4a28;
-      margin-bottom: 8px;
-    }
-    p {
-      font-size: 13px;
-      color: #555;
-      line-height: 1.6;
-      margin-bottom: 20px;
-    }
+    h2 { font-size: 17px; font-weight: 600; color: #0a4a28; margin-bottom: 8px; }
+    p { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 20px; }
     .campos {
       background: #f6fdf8;
       border: 1px solid #d4edda;
@@ -46,33 +36,14 @@
       text-align: left;
       margin-bottom: 20px;
     }
-    .campos p {
-      font-size: 12px;
-      color: #0f9d58;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-    .campo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: #333;
-      padding: 3px 0;
-    }
+    .campos p { font-size: 12px; color: #0f9d58; font-weight: 600; margin-bottom: 8px; }
+    .campo { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #333; padding: 3px 0; }
     .campo span { color: #0f9d58; font-size: 15px; }
     .btn {
-      background: #0f9d58;
-      color: white;
-      border: none;
-      padding: 11px 0;
-      border-radius: 8px;
-      width: 100%;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      transition: background 0.2s;
+      background: #0f9d58; color: white; border: none;
+      padding: 11px 0; border-radius: 8px; width: 100%;
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; transition: background 0.2s;
     }
     .btn:hover { background: #0a7a44; }
     .ok { display: none; color: #0f9d58; font-size: 13px; margin-top: 12px; font-weight: 600; }
@@ -93,31 +64,56 @@
     <div class="campo"><span>✓</span> Nombre del Journey</div>
   </div>
 
-  <button class="btn" onclick="confirmar()">Confirmar y listo</button>
+  <button class="btn" id="btnConfirmar">Confirmar y listo</button>
   <div class="ok" id="ok">✅ Actividad configurada correctamente</div>
 </div>
 
-<script>
-  // Cargar el SDK de Journey Builder
-  (function() {
-    var s = document.createElement('script');
-    s.src = 'https://cdn.exacttarget.com/ufec/journey-builder-ui/custom-activity/sdk.js';
-    s.onload = function() {
-      window.sdk = new window.JourneyBuilderUISDK({
-        onInitActivity: function() {},
-        onClickedNext: function() { confirmar(); }
-      });
-    };
-    document.head.appendChild(s);
-  })();
+<!--
+  POSTMONGER: librería oficial requerida por Journey Builder para comunicación
+  entre el iframe de configuración y el canvas del Journey.
+  - Versión fija 0.0.16 (estable, compatible con versiones Enterprise de SFMC)
+  - Fuente oficial npm: https://www.npmjs.com/package/postmonger
+  - CDN: jsDelivr (confiable, sin dependencia de infraestructura de Salesforce)
+  NO usar: cdn.exacttarget.com (no existe) ni ningún SDK propio de SFMC para el frontend
+-->
+<script src="https://cdn.jsdelivr.net/npm/postmonger@0.0.16/postmonger.js"></script>
 
-  function confirmar() {
-    if (window.sdk && window.sdk.save) {
-      window.sdk.save({
-        metaData: { isConfigured: true },
-        configurationArguments: { configurado: true }
-      });
+<script>
+  // Patrón oficial de Postmonger para Custom Activities en Journey Builder
+  var connection = new Postmonger.Session();
+  var activityPayload = {};
+
+  // Al cargar la página, avisar a Journey Builder que la actividad está lista para recibir datos
+  window.addEventListener('load', function() {
+    connection.trigger('ready');
+  });
+
+  // Journey Builder responde con el payload actual de la actividad (si ya fue configurada antes)
+  connection.on('initActivity', function(payload) {
+    if (payload) {
+      activityPayload = payload;
     }
+  });
+
+  // Journey Builder llama esto cuando el usuario hace clic en "Next" o "Done" en el wizard
+  connection.on('clickedNext', function() {
+    guardarYAvanzar();
+  });
+
+  // Botón en la UI del modal
+  document.getElementById('btnConfirmar').addEventListener('click', function() {
+    guardarYAvanzar();
+  });
+
+  function guardarYAvanzar() {
+    // Marcar la actividad como configurada correctamente
+    activityPayload['metaData'] = activityPayload['metaData'] || {};
+    activityPayload['metaData']['isConfigured'] = true;
+    activityPayload['configurationArguments'] = { configurado: true };
+
+    // Enviar el payload actualizado a Journey Builder para que lo guarde
+    connection.trigger('updateActivity', activityPayload);
+
     document.getElementById('ok').style.display = 'block';
   }
 </script>
