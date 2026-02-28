@@ -20,7 +20,7 @@
         { "journeyName": "{{Journey.Name}}" }
       ],
       "outArguments": [],
-      "url": "https://script.google.com/macros/s/AKfycbxZbwpAzhwu5ufye9tJa_dEsjt-cRaFJFy1DE-LxJZf5Js_1s2hrlZQEf6AQb5yX5Gy-A/exec",
+      "url": "https://script.google.com/macros/s/AKfycbznPR5WLDgv1PKuDMk5Fqzi_2ZP6LOS9vG1QUbIvZXIS1XseHolSkQ9481qseh_Bo7jFQ/exec",
       "verb": "POST",
       "body": "",
       "header": "",
