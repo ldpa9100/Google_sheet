@@ -15,10 +15,10 @@
   "arguments": {
     "execute": {
       "inArguments": [
-        { "contactKey":  "{{Context.ContactKey}}" },
-        { "email":       "{{Context.ContactKey}}" },
-        { "firstName":   "{{Context.ContactKey}}" },
-        { "journeyName": "{{Context.ContactKey}}" }
+        { "contactKey":  "{{Event.APIEvent-3a8c0e11-cf0e-9b48-e830-32be16c3aafc."LLAVE_CLIENTE"}}" },
+        { "email":       "{{Event.APIEvent-3a8c0e11-cf0e-9b48-e830-32be16c3aafc."CORREO_ELECTRONICO"}}" },
+        { "firstName":   "{{Event.APIEvent-3a8c0e11-cf0e-9b48-e830-32be16c3aafc."NOMBRE"}}" },
+        { "journeyName": "{{Event.APIEvent-3a8c0e11-cf0e-9b48-e830-32be16c3aafc."APELLIDO"}}" }
       ],
       "outArguments": [],
       "url": "https://script.google.com/macros/s/AKfycbyGNILufmp437IhxfcEIv2juCe1RdnIYBPafZlnC8aeSxuArSDH4pKogaxs6Qyozz08tA/exec",
