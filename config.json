@@ -15,10 +15,10 @@
   "arguments": {
     "execute": {
       "inArguments": [
-        { "contactKey":  "{{Contact.Key}}" },
-        { "email":       "{{InteractionDefaults.Email}}" },
-        { "firstName":   "{{InteractionDefaults.FirstName}}" },
-        { "journeyName": "{{Journey.Name}}" }
+        { "contactKey":  "{{Contact.Attribute."Contacts"."Contact"."Contact Key"}}" },
+        { "email":       "{{Contact.Attribute."Contacts"."Contact"."EmailAddress"}}" },
+        { "firstName":   "{{InteractionDefaults.Nombre}}" },
+        { "journeyName": "{{InteractionDefaults.APELLIDO}}" }
       ],
       "outArguments": [],
       "url": "https://script.google.com/macros/s/AKfycbyGNILufmp437IhxfcEIv2juCe1RdnIYBPafZlnC8aeSxuArSDH4pKogaxs6Qyozz08tA/exec",
