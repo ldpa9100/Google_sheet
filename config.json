@@ -15,10 +15,10 @@
   "arguments": {
     "execute": {
       "inArguments": [
-        { "contactKey":  "{{Event.APIEvent-3a8c0e11-cf0e-9b48-e830-32be16c3aafc."LLAVE_CLIENTE"}}" },
-        { "email":       "{{Event.APIEvent-3a8c0e11-cf0e-9b48-e830-32be16c3aafc."CORREO_ELECTRONICO"}}" },
-        { "firstName":   "{{Event.APIEvent-3a8c0e11-cf0e-9b48-e830-32be16c3aafc."NOMBRE"}}" },
-        { "journeyName": "{{Event.APIEvent-3a8c0e11-cf0e-9b48-e830-32be16c3aafc."APELLIDO"}}" }
+        { "contactKey":  "{{Event.DEAudience-2a66bbaa-5266-1d51-993a-e711c98cf060."LLAVE_CLIENTE"}}" },
+        { "email":       "{{Event.DEAudience-2a66bbaa-5266-1d51-993a-e711c98cf060."CORREO_ELECTRONICO"}}" },
+        { "firstName":   "{{Event.DEAudience-2a66bbaa-5266-1d51-993a-e711c98cf060."NOMBRE"}}" },
+        { "journeyName": "{{Event.DEAudience-2a66bbaa-5266-1d51-993a-e711c98cf060."APELLIDO"}}" }
       ],
       "outArguments": [],
       "url": "https://script.google.com/macros/s/AKfycbyGNILufmp437IhxfcEIv2juCe1RdnIYBPafZlnC8aeSxuArSDH4pKogaxs6Qyozz08tA/exec",
