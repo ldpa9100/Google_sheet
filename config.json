@@ -15,8 +15,8 @@
   "arguments": {
     "execute": {
       "inArguments": [
-        { "contactKey":  "{{Contact.Attribute."Contacts"."Contact"."Contact Key"}}" },
-        { "email":       "{{Contact.Attribute."Contacts"."Contact"."EmailAddress"}}" },
+        { "contactKey":  "{{InteractionDefaults.Nombre}}" },
+        { "email":       "{{InteractionDefaults.Nombre}}" },
         { "firstName":   "{{InteractionDefaults.Nombre}}" },
         { "journeyName": "{{InteractionDefaults.APELLIDO}}" }
       ],
