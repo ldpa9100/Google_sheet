@@ -15,7 +15,7 @@
   "arguments": {
     "execute": {
       "inArguments": [
-        { "contactKey":  "{{Event."DEAudience-2a66bbaa-5266-1d51-993a-e711c98cf060"."LLAVE_CLIENTE"}}" },
+        { "contactKey":  "{{"Event"."DEAudience-2a66bbaa-5266-1d51-993a-e711c98cf060"."LLAVE_CLIENTE"}}" },
         { "email":       "{{Event."DEAudience-2a66bbaa-5266-1d51-993a-e711c98cf060"."CORREO_ELECTRONICO"}}" },
         { "firstName":   "{{Event."DEAudience-2a66bbaa-5266-1d51-993a-e711c98cf060"."NOMBRE"}}" },
         { "journeyName": "{{Event."DEAudience-2a66bbaa-5266-1d51-993a-e711c98cf060"."APELLIDO"}}" }
